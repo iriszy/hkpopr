@@ -1,0 +1,331 @@
+---
+title: "The hkpopr package explained"
+author: "Ye Zhang"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{The hkpopr package explained}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The `hkpopr` package contains two datasets `pop_list`, `pop_score` and one function `hkpop()`.
+
+# `pop_list` dataset
+
+The `pop_list` dataset is a list of 39 survey tables from the Public Opinion Porgramme (POP) survey center at the University of Hong Kong. Each table is a collection of half-yearly public opinion surveys on a particular topic. These topics include the supportiveness of the HK Chief Executive, the performance of the HK government, the confidence in the future, the perception on different social aspects (democracy, freedom, human rights...) and so on.
+
+# `pop_score` dataset
+
+The `pop_score` dataset is based on the `pop_list` dataset. It combined all survey tables into a data frame, which removed less important columns such as sample size, standard error and only kept the columns of scores/percentages of each survey table. It is more conciese and useful for comparing survey results across different topics.
+
+# `hkpop` function
+
+The `hkpop` function allows the user to get individual survey tables from the POP website. It asks the user to enter the url of a particular survey, and returns a cleaned data frame. For example, to get a survey table of the public opinion on HK government's overall performance:
+
+```{r eval = FALSE}
+gov_overall <- hkpop("https://www.hkupop.hku.hk/english/popexpress/sargperf/sarg/halfyr/datatables.html")
+```
+
+# How to produce / update the `pop_list` and `pop_score` datasets
+
+Most POP surveys are conducted on a half-yearly basis, so the user is able to update the datasets every half year using the same code below.
+
+```{r}
+#Obtain a collections of urls from the POP website. 
+#Below are the surveys I selected which work well on the hkpop() function.
+
+# Popularity of Chief Executive (4)
+ce_lam <- "https://www.hkupop.hku.hk/english/popexpress/ce2017/cl/halfyr/datatables.html"
+ce_leung <- "https://www.hkupop.hku.hk/english/popexpress/ce2012/cy/halfyr/datatables.html"
+ce_tsang <- "https://www.hkupop.hku.hk/english/popexpress/ce2005/donald_new/halfyr/datatables.html"
+ce_tung <- "https://www.hkupop.hku.hk/english/popexpress/ceall/cerq/halfyr/datatables1.html"
+
+# Popularity of the Government (6)
+gov_overall <- "https://www.hkupop.hku.hk/english/popexpress/sargperf/sarg/halfyr/datatables.html"    
+gov_econ <- "https://www.hkupop.hku.hk/english/popexpress/sargperf/econ/halfyr/datatables.html"       
+gov_live <- "https://www.hkupop.hku.hk/english/popexpress/sargperf/live/halfyr/datatables.html"       
+gov_demo <- "https://www.hkupop.hku.hk/english/popexpress/sargperf/demo/halfyr/datatables.html"       
+gov_human_rights <- "https://www.hkupop.hku.hk/english/popexpress/sargperf/hr/halfyr/datatables.html"         
+gov_china <- "https://www.hkupop.hku.hk/english/popexpress/sargperf/chirelation/halfyr/datatables.html"
+
+# Appraisal of Current Conditions (4)
+hk_future <- "https://www.hkupop.hku.hk/english/popexpress/trust/conhkfuture/halfyr/datatables.html"
+china_future <- "https://www.hkupop.hku.hk/english/popexpress/trust/conchifuture/halfyr/datatables.html"
+system <- "https://www.hkupop.hku.hk/english/popexpress/trust/conocts/halfyr/datatables.html"
+most_concern <- "https://www.hkupop.hku.hk/english/popexpress/mostcon/mconq88/halfyr/datatables.html"
+
+# Social Indicators (12)
+democracy <- "https://www.hkupop.hku.hk/english/popexpress/socind/socq45/halfyr/datatables.html"
+freedom <- "https://www.hkupop.hku.hk/english/popexpress/socind/socq46/halfyr/datatables.html"
+rule_of_law <- "https://www.hkupop.hku.hk/english/popexpress/judiciary/socq44/halfyr/datatables.html"
+prosperity <- "https://www.hkupop.hku.hk/english/popexpress/socind/socq47/halfyr/datatables.html"
+stability <- "https://www.hkupop.hku.hk/english/popexpress/socind/socq48/halfyr/datatables.html"
+fairness <- "https://www.hkupop.hku.hk/english/popexpress/socind/socq43/halfyr/datatables.html"
+civilization <- "https://www.hkupop.hku.hk/english/popexpress/socind/socq49/halfyr/datatables.html"
+corruption_free <- "https://www.hkupop.hku.hk/english/popexpress/socind/socq50/halfyr/datatables.html"
+equality <- "https://www.hkupop.hku.hk/english/popexpress/socind/socq51/halfyr/datatables.html"
+efficiency <- "https://www.hkupop.hku.hk/english/popexpress/socind/socq52/halfyr/datatables.html"
+social_welfare <- "https://www.hkupop.hku.hk/english/popexpress/socind/socq53/halfyr/datatables.html"
+public_order <- "https://www.hkupop.hku.hk/english/popexpress/socind/socq54/halfyr/datatables.html"
+
+# Freedom Indicators (10)
+free_speech <- "https://www.hkupop.hku.hk/english/popexpress/freeind/freeq57/halfyr/datatables.html"
+free_press <- "https://www.hkupop.hku.hk/english/popexpress/freeind/freeq58/halfyr/datatables.html"
+free_publication <- "https://www.hkupop.hku.hk/english/popexpress/freeind/freeq59/halfyr/datatables.html"
+free_protest <- "https://www.hkupop.hku.hk/english/popexpress/freeind/freeq60/halfyr/datatables.html"
+free_association <- "https://www.hkupop.hku.hk/english/popexpress/freeind/freeq61/halfyr/datatables.html"
+free_strike <- "https://www.hkupop.hku.hk/english/popexpress/freeind/freeq62/halfyr/datatables.html"
+free_move <- "https://www.hkupop.hku.hk/english/popexpress/freeind/freeq63/halfyr/datatables.html"
+free_academic <- "https://www.hkupop.hku.hk/english/popexpress/freeind/freeq64/halfyr/datatables.html"
+free_art <- "https://www.hkupop.hku.hk/english/popexpress/freeind/freeq65/halfyr/datatables.html"
+free_religion <- "https://www.hkupop.hku.hk/english/popexpress/freeind/freeq66/halfyr/datatables.html"
+
+# Media Performance (1)
+media_credibility <- "https://www.hkupop.hku.hk/english/popexpress/press/nm_credibility/halfyr/datatables.html"
+
+# National issues (2)
+identity <- "https://www.hkupop.hku.hk/english/popexpress/ethnic/eidentity/halfyr/datatables.html"
+trust_cg <- "https://www.hkupop.hku.hk/english/popexpress/trust/trustchigov/halfyr/datatables.html"
+  
+url <- c(ce_lam, ce_leung, ce_tsang, ce_tung, gov_overall, gov_econ, gov_live, gov_demo, gov_human_rights, gov_china, hk_future, china_future, system, most_concern, democracy, freedom, rule_of_law, prosperity, stability, fairness, civilization, corruption_free, equality, efficiency, social_welfare, public_order, free_speech, free_press, free_publication, free_protest, free_association, free_strike, free_move, free_academic, free_art, free_religion, media_credibility, identity, trust_cg)
+```
+
+```{r}
+# This is how the hkpop() function works.
+hkpop <- function(url = ce_lam) {
+  library(rvest)
+  library(dplyr)
+  library(stringr)
+  if (url %in% c(ce_lam, ce_leung, ce_tsang)) {
+    pop <- read_html(url)
+    pop_node <- html_node(pop, xpath = '//*[@id="popexpress"]/span/span/table')
+    pop_table <- html_table(pop_node)
+    colnames_pop <- pop_table[1, ] %>% str_remove_all("[^A-Za-z\\s()-]")
+    colnames(pop_table) <- colnames_pop
+    pop_table <- pop_table[-1, ]
+    pop_table[, 1] <- pop_table[, 1] %>% str_remove_all("[^0-9/-]")
+    pop_table[, 2:ncol(pop_table)] <- as.data.frame(gsub("[^0-9\\.%-]", "",
+                                    as.matrix(pop_table[, 2:ncol(pop_table)])))
+    for (i in 2:ncol(pop_table)) {
+      if (str_detect(pop_table[, i], "%")) {
+        pop_table[, i] <- as.numeric(sub("%","", pop_table[, i]))/100
+      } else {
+        pop_table[, i] <- as.numeric(as.character(pop_table[, i]))
+      }
+    }
+    return(pop_table)
+  } else {
+    pop <- read_html(url)
+    pop_node <- html_node(pop, xpath = '//*[@id="popexpress"]/table')
+    pop_table <- html_table(pop_node)
+    colnames_pop <- pop_table[1, ] %>% str_remove_all("[^A-Za-z\\s()-]")
+    colnames(pop_table) <- colnames_pop
+    pop_table <- pop_table[-1, ]
+    pop_table[, 1] <- pop_table[, 1] %>% str_remove_all("[^0-9/-]")  
+    pop_table[, 2:ncol(pop_table)] <- as.data.frame(gsub("[^0-9\\.%-]", "",
+                                    as.matrix(pop_table[, 2:ncol(pop_table)])))
+    for (i in 2:ncol(pop_table)) {
+      if (str_detect(pop_table[, i], "%")) {
+        pop_table[, i] <- as.numeric(sub("%","", pop_table[, i]))/100
+      } else {
+        pop_table[, i] <- as.numeric(as.character(pop_table[, i]))
+      }
+    }
+    return(pop_table)
+  }
+}
+
+# Use the map function in the purrr package to obtain the pop_list dataset.
+library(purrr)
+pop_list <- url %>% map(hkpop)
+names(pop_list) <- c("ce_lam", "ce_leung", "ce_tsang", "ce_tung", "gov_overall", "gov_econ", "gov_live", "gov_demo", "gov_human_rights", "gov_china", "hk_future", "china_future", "system", "most_concern", "democracy", "freedom", "rule_of_law", "prosperity", "stability", "fairness", "civilization", "corruption_free", "equality", "efficiency", "social_welfare", "public_order", "free_speech", "free_press", "free_publication", "free_protest", "free_association", "free_strike", "free_move", "free_academic", "free_art", "free_religion", "media_credibility", "identity", "trust_cg")
+```
+
+```{r}
+# Keep only columns of score/percentage in each survey table.
+library(dplyr)
+library(tidyr)
+ce_lam_df <- pop_list$ce_lam
+ce_lam_df <- ce_lam_df %>%
+  select(`Date of survey`, `Support Rating(Half-yearly Average)`) %>%
+  mutate(CE = rep("Carrie Lam", nrow(ce_lam_df)))
+
+ce_leung_df <- pop_list$ce_leung
+ce_leung_df <- ce_leung_df %>%
+  select(`Date of survey`, `Support Rating(Half-yearly Average)`) %>%
+  filter(`Date of survey` != "1-6/2012") %>%
+  mutate(CE = rep("Chun-ying Leung", nrow(ce_leung_df)-1))
+
+ce_tsang_df <- pop_list$ce_tsang
+ce_tsang_df <- ce_tsang_df %>%
+  select(`Date of survey`, `Support Rating(Half-yearly Average)`) %>%
+  filter(`Date of survey` != "1-6/2005") %>%
+  mutate(CE = rep("Donald Tsang", nrow(ce_tsang_df)-1))
+
+ce_tung_df <- pop_list$ce_tung
+ce_tung_df <- ce_tung_df %>%
+  select(1, 2)
+colnames(ce_tung_df) <- c("Date of survey", "Support Rating(Half-yearly Average)")
+ce_tung_df <- ce_tung_df %>%
+  separate(`Date of survey`, c("Month", "Year"), sep = "/")
+ce_tung_df[, 2] <- c("2005", rep("2004", 2), rep("2003", 2), rep("2002", 2), rep("2001", 2), rep("2000", 2), rep("1999", 2), rep("1998", 2), rep("1997", 2), "1996")
+ce_tung_df <- ce_tung_df %>%
+  unite("Date of survey", c("Month", "Year"), sep = "/") %>%
+  mutate(CE = rep("Chee-hwa Tung", nrow(ce_tung_df)))
+
+ce_score <- rbind(ce_lam_df, ce_leung_df, ce_tsang_df, ce_tung_df) %>%
+  select(`Date of survey`, CE_name = CE, CE_score = `Support Rating(Half-yearly Average)`)
+```
+
+```{r}
+gov_overall_score <- pop_list$gov_overall %>%
+  select(`Date of survey`, gov_overall = `Mean value`)
+
+gov_econ_score <- pop_list$gov_econ %>%
+  select(`Date of survey`, gov_econ = `Mean value`)
+
+gov_live_score <- pop_list$gov_live %>%
+  select(`Date of survey`, gov_live = `Mean value`)
+
+gov_demo_score <- pop_list$gov_demo %>%
+  select(`Date of survey`, gov_demo = `Mean value`)
+
+gov_human_rights_score <- pop_list$gov_human_rights %>%
+  select(`Date of survey`, gov_human_rights = `Mean value`)
+
+gov_china_score <- pop_list$gov_china %>%
+  select(`Date of survey`, gov_china = `Mean value`)
+
+gov_score <- list(gov_overall_score, gov_econ_score, gov_live_score, gov_demo_score, gov_human_rights_score, gov_china_score) %>% 
+  reduce(full_join, by = "Date of survey")
+```
+
+```{r}
+hk_future_score <- pop_list$hk_future %>%
+  select(`Date of survey`, hk_future = `Net Value`)
+
+china_future_score <- pop_list$china_future %>%
+  select(`Date of survey`, china_future = `Net Value`)
+
+system_score <- pop_list$system %>%
+  select(`Date of survey`, system = `Net Value`)
+
+most_concern_score <- pop_list$most_concern %>%
+  select(`Date of survey` = `Date of Survey`, political_concern = `Political problems`, economic_concern = `Economic problems`, livelihood_concern = `livelihood problems`)
+
+confidence_score <- list(hk_future_score, china_future_score, system_score, most_concern_score) %>% 
+  reduce(full_join, by = "Date of survey")
+```
+
+```{r}
+democracy_score <- pop_list$democracy %>%
+  select(`Date of survey`, democracy = `Appraisal of Degree of Democracy`)
+
+freedom_score <- pop_list$freedom %>% 
+  select(`Date of survey`, freedom = `Appraisal of Degree of Freedom`)
+
+rule_of_law_score <- pop_list$rule_of_law %>%
+  select(`Date of survey`, rule_of_law = `Appraisal of Degree of Compliance with the Rule of Law`)
+
+prosperity_score <- pop_list$prosperity %>%
+  select(`Date of survey`, prosperity = `Appraisal of Degree of Prosperity`)
+  
+stability_score <- pop_list$stability %>%
+  select(`Date of survey`, stability = `Appraisal of Degree of Stability`)
+
+fairness_score <- pop_list$fairness %>%
+  select(`Date of survey`, fairness = `Appraisal of Degree of Fairness`)
+
+civilization_score <- pop_list$civilization %>%
+  select(`Date of survey`, civilization = `Appraisal of Degree of Civilization`)
+
+corruption_free_score <- pop_list$corruption_free %>%
+  select(`Date of survey`, corruption_free = `Appraisal of Degree of Corruption-free Practices`)
+
+equality_score <- pop_list$equality %>%
+  select(`Date of survey`, equality = `Appraisal of Degree of Equality`)
+
+efficiency_score <- pop_list$efficiency %>%
+  select(`Date of survey`, efficiency = `Appraisal of Degree of Efficiency`)
+
+social_welfare_score <- pop_list$social_welfare %>%
+  select(`Date of survey`, social_welfare = `Appraisal of Degree of Social Welfare Sufficiency`)
+
+public_order_score <- pop_list$public_order %>%
+  select(`Date of survey`, public_order = `Appraisal of Degree of Public Order`)
+
+social_score <- list(democracy_score, freedom_score, rule_of_law_score, prosperity_score, stability_score, fairness_score, civilization_score, corruption_free_score, equality_score, efficiency_score, social_welfare_score, public_order_score) %>% 
+  reduce(full_join, by = "Date of survey")
+```
+
+```{r}
+free_speech_score <- pop_list$free_speech %>%
+  select(`Date of survey`, free_speech = `Freedom of Speech`)
+  
+free_press_score <- pop_list$free_press %>%
+  select(`Date of survey`, free_press = `Freedom of Press`)
+
+free_publication_score <- pop_list$free_publication %>%
+  select(`Date of survey`, free_publication = `Freedom of Publication`)
+  
+free_protest_score <- pop_list$free_protest %>%
+  select(`Date of survey`, free_protest = `Freedom of Procession and Demonstration`)
+
+free_association_score <- pop_list$free_association %>%
+  select(`Date of survey`, free_association = `Freedom of Association`)
+
+free_strike_score <- pop_list$free_strike %>%
+  select(`Date of survey`, free_strike = `Freedom to Strike`)
+
+free_move_score <- pop_list$free_move %>%
+  select(`Date of survey`, free_move = `Freedom to Enter or Leave Hong Kong`)
+
+free_academic_score <- pop_list$free_academic %>%
+  select(`Date of survey`, free_academic = `Freedom to Engage in Academic Research`)
+
+free_art_score <- pop_list$free_art %>%
+  select(`Date of survey`, free_art = `Freedom to Engage in Artistic and Literary Creation`)
+
+free_religion_score <- pop_list$free_religion %>%
+  select(`Date of survey`, free_religion = `Freedom of Religous Belief`)
+
+freedom_score <- list(free_speech_score, free_press_score, free_publication_score, free_protest_score, free_association_score, free_strike_score, free_move_score, free_academic_score, free_art_score, free_religion_score) %>% 
+  reduce(full_join, by = "Date of survey")
+```
+
+```{r}
+media_credibility_score <- pop_list$media_credibility %>%
+  select(`Date of survey` = `Date of Survey`, media_credibility = `Ratings(Half-yearly Average)`)
+```
+
+```{r}
+identity_score <- pop_list$identity %>%
+  select(`Date of survey`, hker = Hongkonger, hker_in_china = `Hongkonger in China`, chinese_in_hk = `Chinese in Hong Kong`, chinese = Chinese, mixed_identity = `Mixed Identity`)
+
+trust_cg_score <- pop_list$trust_cg %>%
+  select(`Date of survey`, very_trust_cg = `Very trust`, quite_trust_cg = `Quite trust`, half_half = `Half-half`, quite_distrust_cg = `Quite distrust`, very_distrust_cg = `Very distrust`)
+trust_cg_score[3, 1] <- "7-12/2017"
+```
+
+```{r}
+# Combine the remaining columns of all selected surveys and get the pop_score dataset.
+pop_score <- list(ce_score, gov_score, confidence_score, social_score, freedom_score, media_credibility_score, identity_score, trust_cg_score) %>% 
+  reduce(full_join, by = "Date of survey")
+```
+
+```{r eval = FALSE}
+# Save the datasets
+saveRDS(pop_list, file="pop_list.Rda")
+saveRDS(pop_score, file="pop_score.Rda")
+```
+

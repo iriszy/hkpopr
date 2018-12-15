@@ -20,6 +20,7 @@
 #'   \item{hk_future}{People's confidence in HK's future}
 #'   \item{china_future}{People's confidence in China's Future}
 #'   \item{system}{People's confidence in one-country-two-systems}
+#'   \item{most_concern}{People's most concerned issue}
 #'   \item{democracy}{Degree of democracy}
 #'   \item{freedom}{Degree of freedom}
 #'   \item{rule_of_law}{Compliance with the rule of law}

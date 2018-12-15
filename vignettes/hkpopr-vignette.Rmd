@@ -1,0 +1,38 @@
+---
+title: "The hkpopr package explained"
+author: "Ye Zhang"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{The hkpopr package explained}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The `hkpopr` package contains two datasets `pop_list`, `pop_score` and one function `hkpop()`.
+
+# `pop_list` dataset
+
+The `pop_list` dataset is a list of 39 survey tables from the Public Opinion Porgramme (POP) survey center at the University of Hong Kong. Each table is a collection of half-yearly public opinion surveys on a particular topic. These topics include the supportiveness of the HK Chief Executive, the performance of the HK government, the confidence in the future, the perception on different social aspects (democracy, freedom, human rights...) and so on.
+
+# `pop_score` dataset
+
+The `pop_score` dataset is based on the `pop_list` dataset. It combined all survey tables into a data frame, which removed less important columns such as sample size, standard error and only kept the columns of scores/percentages of each survey table. It is more conciese and useful for comparing survey results across different topics.
+
+# `hkpop` function
+
+The `hkpop` function allows the user to get individual survey tables from the POP website. It asks the user to enter the url of a particular survey, and returns a cleaned data frame. For example, to get a survey table of the public opinion on HK government's overall performance:
+
+```{r eval = FALSE}
+gov_overall <- hkpop("https://www.hkupop.hku.hk/english/popexpress/sargperf/sarg/halfyr/datatables.html")
+```
+

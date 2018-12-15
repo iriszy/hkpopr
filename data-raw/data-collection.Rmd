@@ -1,44 +1,17 @@
 ---
-title: "The hkpopr package explained"
+title: "data-collection"
 author: "Ye Zhang"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{The hkpopr package explained}
-  %\VignetteEncoding{UTF-8}
-  %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
-  chunk_output_type: console
+date: "12/13/2018"
+output: html_document
 ---
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+```{r setup, eval=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
-The `hkpopr` package contains two datasets `pop_list`, `pop_score` and one function `hkpop()`.
+# How to reproduce / update the `pop_list` and `pop_score` datasets
 
-# `pop_list` dataset
-
-The `pop_list` dataset is a list of 39 survey tables from the Public Opinion Porgramme (POP) survey center at the University of Hong Kong. Each table is a collection of half-yearly public opinion surveys on a particular topic. These topics include the supportiveness of the HK Chief Executive, the performance of the HK government, the confidence in the future, the perception on different social aspects (democracy, freedom, human rights...) and so on.
-
-# `pop_score` dataset
-
-The `pop_score` dataset is based on the `pop_list` dataset. It combined all survey tables into a data frame, which removed less important columns such as sample size, standard error and only kept the columns of scores/percentages of each survey table. It is more conciese and useful for comparing survey results across different topics.
-
-# `hkpop` function
-
-The `hkpop` function allows the user to get individual survey tables from the POP website. It asks the user to enter the url of a particular survey, and returns a cleaned data frame. For example, to get a survey table of the public opinion on HK government's overall performance:
-
-```{r eval = FALSE}
-gov_overall <- hkpop("https://www.hkupop.hku.hk/english/popexpress/sargperf/sarg/halfyr/datatables.html")
-```
-
-# How to produce / update the `pop_list` and `pop_score` datasets
-
-Most POP surveys are conducted on a half-yearly basis, so the user is able to update the datasets every half year using the same code below.
+Most POP surveys are conducted on a half-yearly basis, so the user is able to reproduce / update the datasets using the following code:
 
 ```{r}
 #Obtain a collections of urls from the POP website. 
@@ -100,7 +73,7 @@ trust_cg <- "https://www.hkupop.hku.hk/english/popexpress/trust/trustchigov/half
 url <- c(ce_lam, ce_leung, ce_tsang, ce_tung, gov_overall, gov_econ, gov_live, gov_demo, gov_human_rights, gov_china, hk_future, china_future, system, most_concern, democracy, freedom, rule_of_law, prosperity, stability, fairness, civilization, corruption_free, equality, efficiency, social_welfare, public_order, free_speech, free_press, free_publication, free_protest, free_association, free_strike, free_move, free_academic, free_art, free_religion, media_credibility, identity, trust_cg)
 ```
 
-```{r}
+```{r, warning=FALSE}
 # This is how the hkpop() function works.
 hkpop <- function(url = ce_lam) {
   library(rvest)
@@ -323,9 +296,8 @@ pop_score <- list(ce_score, gov_score, confidence_score, social_score, freedom_s
   reduce(full_join, by = "Date of survey")
 ```
 
-```{r eval = FALSE}
+```{r}
 # Save the datasets
 saveRDS(pop_list, file="pop_list.Rda")
 saveRDS(pop_score, file="pop_score.Rda")
 ```
-

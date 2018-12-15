@@ -1,0 +1,100 @@
+---
+title: "data-presentation"
+author: "Ye Zhang"
+date: "12/13/2018"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Summary of `pop_list`
+
+```{r}
+pop_list <- readRDS("pop_list.Rda")
+str(pop_list, max.level = 1)
+```
+
+# Sumarry of `pop_score`
+
+```{r}
+pop_score <- readRDS("pop_score.Rda")
+str(pop_score)
+summary(pop_score)
+```
+
+# Visualization
+```{r}
+library(dplyr)
+library(tidyr)
+
+# some transformation of the date of survey
+pop_score <- pop_score %>%
+  separate(`Date of survey`, c("month", "year"), sep = "/") %>%
+  select(year, month, 3:49) %>%
+  unite("date_of_survey", c("year", "month"), sep = "/")
+
+library(ggplot2)
+ggplot(pop_score, aes(x = date_of_survey, y = CE_score, group = 1)) +
+  geom_line() +
+  ylim(0, 100) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ggtitle("How would you rate the Chief Executive (0-100)") +
+  ylab("Rating") +
+  xlab("Date of survey")
+
+ggplot(pop_score, aes(date_of_survey)) + 
+  geom_line(aes(y = gov_overall, colour = "gov_overall", group = 1)) + 
+  geom_line(aes(y = gov_econ, colour = "gov_econ", group = 1)) +
+  geom_line(aes(y = gov_live, colour = "gov_live", group = 1)) +
+  geom_line(aes(y = gov_demo, colour = "gov_demo", group = 1)) +
+  geom_line(aes(y = gov_human_rights, colour = "gov_human_rights", group = 1)) +
+  geom_line(aes(y = gov_china, colour = "gov_china", group = 1)) +
+  ylim(1, 5) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ggtitle("How would you rate the performance of the \nHKSAR Government (1-5)") +
+  ylab("Rating") +
+  xlab("Date of survey")
+
+ggplot(pop_score, aes(date_of_survey)) + 
+  geom_line(aes(y = hk_future, colour = "hk_future", group = 1)) + 
+  geom_line(aes(y = china_future, colour = "china_future", group = 1)) +
+  geom_line(aes(y = system, colour = "one country two systems", group = 1)) +
+  ylim(-1, 1) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ggtitle("Do you have confidence in the future?") +
+  ylab("Net value") +
+  xlab("Date of survey")
+
+ggplot(pop_score, aes(date_of_survey)) + 
+  geom_line(aes(y = political_concern, colour = "political problem", group = 1)) + 
+  geom_line(aes(y = economic_concern, colour = "economic problem", group = 1)) +
+  geom_line(aes(y = livelihood_concern, colour = "livelihood problem", group = 1)) +
+  ylim(0, 1) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ggtitle("What kind of problems are you most concerned with?") +
+  ylab("Proportion of respondents") +
+  xlab("Date of survey")
+
+ggplot(pop_score, aes(date_of_survey)) + 
+  geom_line(aes(y = democracy, colour = "democracy", group = 1)) + 
+  geom_line(aes(y = freedom, colour = "freedom", group = 1)) +
+  geom_line(aes(y = rule_of_law, colour = "rule_of_law", group = 1)) +
+  geom_line(aes(y = prosperity, colour = "prosperity", group = 1)) +
+  geom_line(aes(y = stability, colour = "stability", group = 1)) +
+  geom_line(aes(y = fairness, colour = "fairness", group = 1)) +
+  geom_line(aes(y = civilization, colour = "civilization", group = 1)) +
+  geom_line(aes(y = corruption_free, colour = "corruption_free", group = 1)) +
+  geom_line(aes(y = equality, colour = "equality", group = 1)) +
+  geom_line(aes(y = efficiency, colour = "efficiency", group = 1)) +
+  geom_line(aes(y = social_welfare, colour = "social_welfare", group = 1)) +
+  geom_line(aes(y = public_order, colour = "public_order", group = 1)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ggtitle("How would you rate Hong Kong (1-10) \nin 12 aspects?") +
+  ylab("Rating") +
+  xlab("Date of survey")
+```
+

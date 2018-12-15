@@ -1,0 +1,36 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# hkpopr
+
+The goal of hkpopr is to provide Hong Kong Public Opinion Data from the Public Opinion Programme (POP).
+
+## Installation
+
+You can install the released version of hkpopr from [Github](https://github.com/iriszy/hkpopr) with:
+
+``` r
+install.packages("devtools")
+devtools::install_github("iriszy/hkpopr")
+```
+
+## Example
+
+This is a basic example which shows you how to get a survey table from POP's website:
+
+```{r example}
+hkpop(url = "https://www.hkupop.hku.hk/english/popexpress/sargperf/sarg/halfyr/datatables.html")
+```
+
+You can also use the two datasets `pop_list` and `pop_score` in the package, which have combined 39 survey tables from POP's websites.

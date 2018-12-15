@@ -1,4 +1,3 @@
-
 #' Get Hong Kong Public Opinion Data.
 #'
 #' This function allows the user to get Hong Kong public opinion data from the

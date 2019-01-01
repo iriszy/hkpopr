@@ -20,6 +20,7 @@
 
 hkpop <- function(url = "https://www.hkupop.hku.hk/english/popexpress/sargperf/sarg/halfyr/datatables.html") {
   library(rvest)
+  library(xml2)
   library(dplyr)
   library(stringr)
   if (url %in% c(
